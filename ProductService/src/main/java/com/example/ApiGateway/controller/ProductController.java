@@ -1,7 +1,7 @@
-package com.example.ProductService.controller;
+package com.example.ApiGateway.controller;
 
-import com.example.ProductService.entity.Product;
-import com.example.ProductService.service.ProductService;
+import com.example.ApiGateway.entity.Product;
+import com.example.ApiGateway.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

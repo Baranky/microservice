@@ -1,7 +1,7 @@
-package com.example.ProductService.service;
+package com.example.ApiGateway.service;
 
-import com.example.ProductService.entity.Product;
-import com.example.ProductService.repository.ProductRepository;
+import com.example.ApiGateway.entity.Product;
+import com.example.ApiGateway.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

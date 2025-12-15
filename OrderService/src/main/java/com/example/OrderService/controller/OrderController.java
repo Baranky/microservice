@@ -60,7 +60,7 @@ public class OrderController {
 
     @PatchMapping("/{id}/status")
     public ResponseEntity<Order> updateOrderStatus(
-            @PathVariable("id") Long id){
+            @PathVariable("id") Long id) {
         log.info("Sipariş durumu güncelleniyor: {} -> {}", id);
         try {
             Order updatedOrder = orderService.updateOrderStatus(id);
@@ -79,5 +79,13 @@ public class OrderController {
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    // Circuit Breaker test endpoint
+    @PostMapping("/test-circuit")
+    public ResponseEntity<String> testCircuitBreaker(@RequestParam("productId") Long productId) {
+        log.info("Circuit breaker testi, productId={}", productId);
+        String result = orderService.siparisVer(productId);
+        return ResponseEntity.ok(result);
     }
 }

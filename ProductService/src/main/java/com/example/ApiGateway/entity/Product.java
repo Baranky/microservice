@@ -1,4 +1,4 @@
-package com.example.ProductService.entity;
+package com.example.ApiGateway.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
