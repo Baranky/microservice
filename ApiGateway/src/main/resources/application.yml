@@ -9,22 +9,20 @@ spring:
 
   cloud:
     gateway:
-      server:
-        webflux:
-          discovery:
-            locator:
-              enabled: true # Eureka'daki servisleri otomatik tanı
-          # YÖNLENDİRME KURALLARI (ROUTING)
-          routes:
-            - id: product-service-route
-              uri: lb://product-service # lb = Load Balancer (Eureka ismini kullan!)
-              predicates:
-                - Path=/api/products/** # Eğer istek bu yolla gelirse...
+      discovery:
+        locator:
+          enabled: true # Eureka'daki servisleri otomatik tanı
+      # YÖNLENDİRME KURALLARI (ROUTING)
+      routes:
+        - id: product-service-route
+          uri: lb://product-service # lb = Load Balancer (Eureka ismini kullan!)
+          predicates:
+            - Path=/api/products/** # Eğer istek bu yolla gelirse...
 
-            - id: order-service-route
-              uri: lb://order-service
-              predicates:
-                - Path=/api/orders/**
+        - id: order-service-route
+          uri: lb://order-service
+          predicates:
+            - Path=/api/orders/**
 
 eureka:
   client:

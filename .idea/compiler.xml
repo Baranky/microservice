@@ -6,10 +6,20 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="inventory-service" />
         <module name="OrderService" />
         <module name="ProductService" />
         <module name="ApiGateway" />
         <module name="EurekaService" />
+      </profile>
+      <profile name="Annotation profile for InventoryService" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
+        </processorPath>
+        <module name="InventoryService" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -17,18 +27,21 @@
       <module name="demo (1)" target="21" />
       <module name="demo (2)" target="21" />
       <module name="demo (3)" target="21" />
+      <module name="inventory-service" target="21" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="ApiGateway" options="-parameters" />
       <module name="EurekaService" options="-parameters" />
+      <module name="InventoryService" options="-parameters" />
       <module name="OrderService" options="-parameters" />
       <module name="ProductService" options="-parameters" />
       <module name="demo" options="-parameters" />
       <module name="demo (1)" options="-parameters" />
       <module name="demo (2)" options="-parameters" />
       <module name="demo (3)" options="-parameters" />
+      <module name="inventory-service" options="-parameters" />
     </option>
   </component>
 </project>

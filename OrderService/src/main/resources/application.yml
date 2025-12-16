@@ -5,7 +5,6 @@ spring:
   application:
     name: order-service
 
-
 resilience4j:
   circuitbreaker:
     instances:
@@ -17,3 +16,21 @@ resilience4j:
         waitDurationInOpenState: 10s
         permittedNumberOfCallsInHalfOpenState: 3
         automaticTransitionFromOpenToHalfOpenEnabled: true
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+        spring.json.trusted.packages: "*"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
