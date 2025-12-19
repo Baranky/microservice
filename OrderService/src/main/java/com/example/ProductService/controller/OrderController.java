@@ -81,7 +81,6 @@ public class OrderController {
         }
     }
 
-    // Circuit Breaker test endpoint
     @PostMapping("/test-circuit")
     public ResponseEntity<String> testCircuitBreaker(@RequestParam("productId") Long productId) {
         log.info("Circuit breaker testi, productId={}", productId);

@@ -43,7 +43,6 @@ public class OrderService {
     public Order createOrder(Order order) {
         Order saved = orderRepository.save(order);
 
-        // Kafka event fırlat (orderId, productId, quantity)
         OrderEvent event = new OrderEvent(saved.getId(), saved.getProductId(), saved.getQuantity());
         kafkaTemplate.send("order-placed", event);
 
@@ -69,18 +68,12 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    // Dış ürün servisi çağrısı korumalı (Circuit Breaker)
     @CircuitBreaker(name = "productService", fallbackMethod = "urunFallback")
     public String siparisVer(Long productId) {
-        // Ürün bilgisini al; hata durumunda fallback çalışacak.
         productClient.getProductById(productId);
         return "Sipariş oluşturuldu, ürün onaylandı.";
     }
 
-    public String urunFallback(Long productId, Throwable t) {
-        log.error("Ürün servisi yanıt vermiyor, fallback devrede. productId={}", productId, t);
-        return "Ürün servisi şu an cevap vermiyor. Siparişiniz 'BEKLEMEDE' moduna alındı.";
-    }
 
     public void deleteOrder(Long id) {
         if (!orderRepository.existsById(id)) {

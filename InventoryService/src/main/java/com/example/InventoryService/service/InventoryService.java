@@ -38,7 +38,6 @@ public class InventoryService {
         if (inv.getStock() < event.getQuantity()) {
             log.warn("Yetersiz stok, productId={}, mevcut={}, istenen={}",
                     event.getProductId(), inv.getStock(), event.getQuantity());
-            // Burada ileride OrderService'e 'stok yok' eventi basılabilir.
             return;
         }
 

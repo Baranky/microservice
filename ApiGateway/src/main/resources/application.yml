@@ -1,24 +1,22 @@
 server:
-  port: 8082 # Plazanın ana giriş kapısı!
+  port: 8082
 
 spring:
   application:
     name: api-gateway
   main:
-    web-application-type: reactive
+    web-application-type: servlet
 
   cloud:
     gateway:
       discovery:
         locator:
-          enabled: true # Eureka'daki servisleri otomatik tanı
-      # YÖNLENDİRME KURALLARI (ROUTING)
+          enabled: true
       routes:
         - id: product-service-route
-          uri: lb://product-service # lb = Load Balancer (Eureka ismini kullan!)
+          uri: lb://product-service
           predicates:
-            - Path=/api/products/** # Eğer istek bu yolla gelirse...
-
+            - Path=/api/products/**
         - id: order-service-route
           uri: lb://order-service
           predicates:
