@@ -1,5 +1,6 @@
 package com.example.ProductService.controller;
 
+import com.example.ProductService.dto.OrderRequest;
 import com.example.ProductService.entity.Order;
 import com.example.ProductService.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,17 +42,17 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+    public ResponseEntity<Order> createOrder(@RequestBody OrderRequest request) {
         log.info("Yeni sipariş oluşturuluyor");
-        Order createdOrder = orderService.createOrder(order);
+        Order createdOrder = orderService.createOrder(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Order> updateOrder(@PathVariable("id") Long id, @RequestBody Order order) {
+    public ResponseEntity<Order> updateOrder(@PathVariable("id") Long id, @RequestBody OrderRequest request) {
         log.info("Sipariş güncelleniyor: {}", id);
         try {
-            Order updatedOrder = orderService.updateOrder(id, order);
+            Order updatedOrder = orderService.updateOrder(id, request);
             return ResponseEntity.ok(updatedOrder);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();

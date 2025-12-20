@@ -1,9 +1,13 @@
 package com.example.ProductService.service;
 
+import com.example.ProductService.client.InventoryClient;
+import com.example.ProductService.dto.InventoryRequest;
+import com.example.ProductService.dto.ProductRequest;
 import com.example.ProductService.entity.Product;
 import com.example.ProductService.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +17,11 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final InventoryClient inventoryClient;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, InventoryClient inventoryClient) {
         this.productRepository = productRepository;
+        this.inventoryClient = inventoryClient;
     }
 
     public List<Product> getAllProducts() {
@@ -26,26 +32,53 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public Product createProduct(Product product) {
-        return productRepository.save(product);
+    @Transactional
+    public Product createProduct(ProductRequest request) {
+        Product newProduct = new Product();
+        newProduct.setName(request.name());
+        newProduct.setDescription(request.description());
+        newProduct.setPrice(request.price());
+        Product savedProduct = productRepository.save(newProduct);
+
+        try {
+            InventoryRequest inventoryRequest = new InventoryRequest(savedProduct.getId(),request.stock());
+            inventoryClient.createInventory(inventoryRequest);
+            log.info("Product ve Inventory kaydı oluşturuldu: productId={}, stock={}",
+                    savedProduct.getId(), request.stock());
+        } catch (Exception e) {
+            log.error("Inventory kaydı oluşturulamadı, product siliniyor: productId={}", savedProduct.getId(), e);
+            productRepository.delete(savedProduct);
+            throw new RuntimeException("Ürün oluşturulamadı: " + e.getMessage());
+        }
+
+        return savedProduct;
     }
 
-    public Product updateProduct(Long id, Product product) {
+    public Product updateProduct(Long id, ProductRequest request) {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ürün bulunamadı: " + id));
 
-        existingProduct.setName(product.getName());
-        existingProduct.setDescription(product.getDescription());
-        existingProduct.setPrice(product.getPrice());
-        existingProduct.setStock(product.getStock());
+        existingProduct.setName(request.name());
+        existingProduct.setDescription(request.description());
+        existingProduct.setPrice(request.price());
 
         return productRepository.save(existingProduct);
     }
 
+    @Transactional
     public void deleteProduct(Long id) {
         if (!productRepository.existsById(id)) {
             throw new RuntimeException("Ürün bulunamadı: " + id);
         }
+
+        try {
+            inventoryClient.deleteInventoryByProductId(id);
+            log.info("Inventory kaydı silindi: productId={}", id);
+        } catch (Exception e) {
+            log.warn("Inventory kaydı silinirken hata oluştu (devam ediliyor): productId={}", id, e);
+        }
+
         productRepository.deleteById(id);
+        log.info("Product silindi: productId={}", id);
     }
 }

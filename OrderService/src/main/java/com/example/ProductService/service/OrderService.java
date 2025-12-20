@@ -1,12 +1,13 @@
 package com.example.ProductService.service;
 
 import com.example.ProductService.client.ProductClient;
-import com.example.ProductService.event.OrderEvent;
+import com.example.ProductService.dto.OrderRequest;
 import com.example.ProductService.entity.Order;
+import com.example.ProductService.event.OrderEvent;
 import com.example.ProductService.repository.OrderRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import org.springframework.kafka.core.KafkaTemplate;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,8 +41,15 @@ public class OrderService {
         return orderRepository.findByCustomerEmail(email);
     }
 
-    public Order createOrder(Order order) {
-        Order saved = orderRepository.save(order);
+    public Order createOrder(OrderRequest request) {
+        Order newOrder = new Order();
+        newOrder.setProductId(request.productId());
+        newOrder.setQuantity(request.quantity());
+        newOrder.setTotalPrice(request.totalPrice());
+        newOrder.setCustomerName(request.customerName());
+        newOrder.setCustomerEmail(request.customerEmail());
+
+        Order saved = orderRepository.save(newOrder);
 
         OrderEvent event = new OrderEvent(saved.getId(), saved.getProductId(), saved.getQuantity());
         kafkaTemplate.send("order-placed", event);
@@ -50,15 +58,16 @@ public class OrderService {
         return saved;
     }
 
-    public Order updateOrder(Long id, Order order) {
+    public Order updateOrder(Long id, OrderRequest request) {
         Order existingOrder = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Sipariş bulunamadı: " + id));
 
-        existingOrder.setProductId(order.getProductId());
-        existingOrder.setQuantity(order.getQuantity());
-        existingOrder.setTotalPrice(order.getTotalPrice());
-        existingOrder.setCustomerName(order.getCustomerName());
-        existingOrder.setCustomerEmail(order.getCustomerEmail());
+        existingOrder.setProductId(request.productId());
+        existingOrder.setQuantity(request.quantity());
+        existingOrder.setTotalPrice(request.totalPrice());
+        existingOrder.setCustomerName(request.customerName());
+        existingOrder.setCustomerEmail(request.customerEmail());
+
         return orderRepository.save(existingOrder);
     }
 

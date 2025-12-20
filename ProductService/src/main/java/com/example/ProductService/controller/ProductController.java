@@ -1,5 +1,6 @@
 package com.example.ProductService.controller;
 
+import com.example.ProductService.dto.ProductRequest;
 import com.example.ProductService.entity.Product;
 import com.example.ProductService.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -35,17 +36,17 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        log.info("Yeni ürün oluşturuluyor: {}", product.getName());
-        Product createdProduct = productService.createProduct(product);
+    public ResponseEntity<Product> createProduct(@RequestBody ProductRequest request) {
+        log.info("Yeni ürün oluşturuluyor: {}", request.name());
+        Product createdProduct = productService.createProduct(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
+    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequest request) {
         log.info("Ürün güncelleniyor: {}", id);
         try {
-            Product updatedProduct = productService.updateProduct(id, product);
+            Product updatedProduct = productService.updateProduct(id, request);
             return ResponseEntity.ok(updatedProduct);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();

@@ -15,11 +15,28 @@ import com.example.InventoryService.repository.InventoryRepository;
 public class InventoryService {
 
     private static final Logger log = LoggerFactory.getLogger(InventoryService.class);
-
     private final InventoryRepository inventoryRepository;
 
     public InventoryService(InventoryRepository inventoryRepository) {
         this.inventoryRepository = inventoryRepository;
+    }
+
+    public Inventory createInventory(Inventory inventory) {
+        Optional<Inventory> existing = inventoryRepository.findByProductId(inventory.getProductId());
+        if (existing.isPresent()) {
+            throw new RuntimeException("Bu ürün için zaten stok kaydı mevcut: " + inventory.getProductId());
+        }
+        return inventoryRepository.save(inventory);
+    }
+
+    public void deleteByProductId(Long productId) {
+        Optional<Inventory> inventory = inventoryRepository.findByProductId(productId);
+        if (inventory.isPresent()) {
+            inventoryRepository.delete(inventory.get());
+            log.info("Stok kaydı silindi: productId={}", productId);
+        } else {
+            log.warn("Silinecek stok kaydı bulunamadı: productId={}", productId);
+        }
     }
 
     @KafkaListener(topics = "order-placed", groupId = "inventory-group")
