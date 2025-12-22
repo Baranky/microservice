@@ -32,7 +32,7 @@ Proje 5 ana mikroservisten oluşur:
 
 ## Teknolojiler
 
-* **Dil:** Java 21
+* **Dil:** Java
 * **Framework:** Spring Boot 3.5.x, Spring Cloud 2025.0.0
 * **Discovery:** Netflix Eureka Client / Server
 * **Gateway:** Spring Cloud Gateway
