@@ -43,7 +43,7 @@ Proje 5 ana mikroservisten oluşur:
 * **Tracing:** Zipkin (Distributed Tracing)
 * **Veritabanı:** PostgreSQL, Spring Data JPA
 * **Mesajlaşma:** Apache Kafka, Zookeeper
-* **Araçlar:** Lombok, Maven, Docker Compose
+* **Araçlar:**  Docker
 
 ##  Docker Compose Servisleri
 
