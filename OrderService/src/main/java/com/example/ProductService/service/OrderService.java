@@ -3,12 +3,14 @@ package com.example.ProductService.service;
 import com.example.ProductService.client.ProductClient;
 import com.example.ProductService.dto.OrderRequest;
 import com.example.ProductService.entity.Order;
+import com.example.ProductService.enums.OrderStatus;
 import com.example.ProductService.event.OrderEvent;
 import com.example.ProductService.repository.OrderRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,20 +43,29 @@ public class OrderService {
         return orderRepository.findByCustomerEmail(email);
     }
 
+
+    @Transactional
     public Order createOrder(OrderRequest request) {
+        log.info("Yeni sipariş oluşturuluyor: productId={}, quantity={}, customerEmail={}",
+                request.productId(), request.quantity(), request.customerEmail());
+
         Order newOrder = new Order();
         newOrder.setProductId(request.productId());
         newOrder.setQuantity(request.quantity());
         newOrder.setTotalPrice(request.totalPrice());
         newOrder.setCustomerName(request.customerName());
         newOrder.setCustomerEmail(request.customerEmail());
+        newOrder.setStatus(OrderStatus.PENDING);
 
         Order saved = orderRepository.save(newOrder);
+        log.info("Sipariş kaydedildi: orderId={}, status=PENDING", saved.getId());
 
-        OrderEvent event = new OrderEvent(saved.getId(), saved.getProductId(), saved.getQuantity());
+        OrderEvent event = new OrderEvent(saved.getId(), saved.getProductId(), saved.getQuantity(),
+                saved.getTotalPrice(), saved.getCustomerEmail());
         kafkaTemplate.send("order-placed", event);
 
-        log.info("Sipariş kaydedildi ve Kafka'ya event gönderildi. orderId={}", saved.getId());
+        log.info("Order-placed event gönderildi: orderId={}, productId={}, quantity={}",
+                saved.getId(), saved.getProductId(), saved.getQuantity());
         return saved;
     }
 

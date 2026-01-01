@@ -7,10 +7,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="inventory-service" />
-        <module name="OrderService" />
+        <module name="paymentService" />
         <module name="ProductService" />
-        <module name="ApiGateway" />
         <module name="EurekaService" />
+        <module name="OrderService" />
+        <module name="ApiGateway" />
       </profile>
       <profile name="Annotation profile for InventoryService" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -28,6 +29,8 @@
       <module name="demo (2)" target="21" />
       <module name="demo (3)" target="21" />
       <module name="inventory-service" target="21" />
+      <module name="paymentService (1)" target="21" />
+      <module name="paymentService (2)" target="21" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -42,6 +45,9 @@
       <module name="demo (2)" options="-parameters" />
       <module name="demo (3)" options="-parameters" />
       <module name="inventory-service" options="-parameters" />
+      <module name="paymentService" options="-parameters" />
+      <module name="paymentService (1)" options="-parameters" />
+      <module name="paymentService (2)" options="-parameters" />
     </option>
   </component>
 </project>
