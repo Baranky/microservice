@@ -4,13 +4,12 @@ Bu proje, **Spring Boot 3** ve **Spring Cloud** teknolojileri kullanılarak geli
 
 ## 📋 İçindekiler
 
-- [Mimari ve Servisler](#mimari-ve-servisler)
-- [Saga Pattern İş Akışı](#saga-pattern-iş-akışı)
-- [Teknolojiler](#teknolojiler)
-- [Kurulum ve Çalıştırma](#kurulum-ve-çalıştırma)
-- [API Endpoints](#api-endpoints)
-- [Test Senaryoları](#test-senaryoları)
-- [Monitoring ve Tracing](#monitoring-ve-tracing)
+- [Mimari ve Servisler]
+- [Saga Pattern İş Akışı]
+- [Teknolojiler]
+- [Kurulum ve Çalıştırma]
+- [API Endpoints]
+- [Monitoring ve Tracing]
 
 ## 🏗️ Mimari ve Servisler
 
