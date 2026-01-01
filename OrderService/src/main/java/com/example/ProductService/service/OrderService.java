@@ -10,7 +10,6 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,11 +43,7 @@ public class OrderService {
     }
 
 
-    @Transactional
     public Order createOrder(OrderRequest request) {
-        log.info("Yeni sipariş oluşturuluyor: productId={}, quantity={}, customerEmail={}",
-                request.productId(), request.quantity(), request.customerEmail());
-
         Order newOrder = new Order();
         newOrder.setProductId(request.productId());
         newOrder.setQuantity(request.quantity());
@@ -58,7 +53,6 @@ public class OrderService {
         newOrder.setStatus(OrderStatus.PENDING);
 
         Order saved = orderRepository.save(newOrder);
-        log.info("Sipariş kaydedildi: orderId={}, status=PENDING", saved.getId());
 
         OrderEvent event = new OrderEvent(saved.getId(), saved.getProductId(), saved.getQuantity(),
                 saved.getTotalPrice(), saved.getCustomerEmail());

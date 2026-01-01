@@ -22,14 +22,12 @@ public class OrderEventListener {
     }
 
     @KafkaListener(topics = "stock-reserved", groupId = "payment-group", containerFactory = "stockReservedKafkaListenerContainerFactory")
-    @Transactional
     public void handleStockReserved(StockReservedEvent stockReservedEvent) {
         log.info("Stock reserved event alındı: orderId={}, productId={}, quantity={}, totalPrice={}, customerEmail={}",
                 stockReservedEvent.orderId(), stockReservedEvent.productId(), stockReservedEvent.quantity(),
                 stockReservedEvent.totalPrice(), stockReservedEvent.customerEmail());
 
         try {
-            // Payment kaydı oluştur (PENDING status ile - manuel ödeme bekleniyor)
             Payment payment = paymentService.createPendingPayment(stockReservedEvent);
             log.info("Payment kaydı oluşturuldu (manuel ödeme bekleniyor): paymentId={}, orderId={}, status=PENDING",
                     payment.getId(), payment.getOrderId());

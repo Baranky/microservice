@@ -23,13 +23,11 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts() {
-        log.info("Tüm ürünler isteniyor");
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable("id") Long id) {
-        log.info("Ürün isteniyor: {}", id);
         return productService.getProductById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -37,14 +35,12 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody ProductRequest request) {
-        log.info("Yeni ürün oluşturuluyor: {}", request.name());
         Product createdProduct = productService.createProduct(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequest request) {
-        log.info("Ürün güncelleniyor: {}", id);
         try {
             Product updatedProduct = productService.updateProduct(id, request);
             return ResponseEntity.ok(updatedProduct);
@@ -55,7 +51,6 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
-        log.info("Ürün siliniyor: {}", id);
         try {
             productService.deleteProduct(id);
             return ResponseEntity.noContent().build();

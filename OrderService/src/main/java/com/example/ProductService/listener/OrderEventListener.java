@@ -1,17 +1,14 @@
 package com.example.ProductService.listener;
 
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.example.ProductService.entity.Order;
 import com.example.ProductService.enums.OrderStatus;
 import com.example.ProductService.event.OrderCancelledEvent;
 import com.example.ProductService.event.PaymentConfirmedEvent;
 import com.example.ProductService.event.StockReleasedEvent;
 import com.example.ProductService.repository.OrderRepository;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
@@ -24,7 +21,6 @@ public class OrderEventListener {
     }
 
     @KafkaListener(topics = "payment-confirmed", groupId = "order-group", containerFactory = "paymentConfirmedKafkaListenerContainerFactory")
-    @Transactional
     public void handlePaymentConfirmed(PaymentConfirmedEvent event) {
         log.info("Payment confirmed event alındı: orderId={}, paymentId={}, status={}",
                 event.orderId(), event.paymentId(), event.status());
@@ -49,7 +45,6 @@ public class OrderEventListener {
     }
 
     @KafkaListener(topics = "order-cancelled", groupId = "order-group", containerFactory = "orderCancelledKafkaListenerContainerFactory")
-    @Transactional
     public void handleOrderCancelled(OrderCancelledEvent event) {
         log.info("Order cancelled event alındı: orderId={}, reason={}",
                 event.orderId(), event.reason());
@@ -70,7 +65,6 @@ public class OrderEventListener {
     }
 
     @KafkaListener(topics = "stock-released", groupId = "order-group", containerFactory = "stockReleasedKafkaListenerContainerFactory")
-    @Transactional
     public void handleStockReleased(StockReleasedEvent event) {
         log.info("Stock released event alındı: orderId={}, productId={}, quantity={}, reason={}",
                 event.orderId(), event.productId(), event.quantity(), event.reason());

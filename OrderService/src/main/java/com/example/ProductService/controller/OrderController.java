@@ -23,13 +23,11 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrders() {
-        log.info("Tüm siparişler isteniyor");
         return ResponseEntity.ok(orderService.getAllOrders());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable("id") Long id) {
-        log.info("Sipariş isteniyor: {}", id);
         return orderService.getOrderById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -37,20 +35,17 @@ public class OrderController {
 
     @GetMapping("/customer/{email}")
     public ResponseEntity<List<Order>> getOrdersByCustomerEmail(@PathVariable("email") String email) {
-        log.info("Müşteri siparişleri isteniyor: {}", email);
         return ResponseEntity.ok(orderService.getOrdersByCustomerEmail(email));
     }
 
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody OrderRequest request) {
-        log.info("Yeni sipariş oluşturuluyor");
         Order createdOrder = orderService.createOrder(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Order> updateOrder(@PathVariable("id") Long id, @RequestBody OrderRequest request) {
-        log.info("Sipariş güncelleniyor: {}", id);
         try {
             Order updatedOrder = orderService.updateOrder(id, request);
             return ResponseEntity.ok(updatedOrder);
@@ -62,7 +57,6 @@ public class OrderController {
     @PatchMapping("/{id}/status")
     public ResponseEntity<Order> updateOrderStatus(
             @PathVariable("id") Long id) {
-        log.info("Sipariş durumu güncelleniyor: {} -> {}", id);
         try {
             Order updatedOrder = orderService.updateOrderStatus(id);
             return ResponseEntity.ok(updatedOrder);
@@ -73,7 +67,6 @@ public class OrderController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable("id") Long id) {
-        log.info("Sipariş siliniyor: {}", id);
         try {
             orderService.deleteOrder(id);
             return ResponseEntity.noContent().build();

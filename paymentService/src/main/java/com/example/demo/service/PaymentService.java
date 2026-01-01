@@ -39,10 +39,6 @@ public class PaymentService {
 
 
     public Payment createPendingPayment(StockReservedEvent stockReservedEvent) {
-        log.info("Payment kaydı oluşturuluyor (manuel ödeme bekleniyor): orderId={}, productId={}, quantity={}, totalPrice={}, customerEmail={}",
-                stockReservedEvent.orderId(), stockReservedEvent.productId(), stockReservedEvent.quantity(),
-                stockReservedEvent.totalPrice(), stockReservedEvent.customerEmail());
-
         Payment payment = new Payment();
         payment.setOrderId(String.valueOf(stockReservedEvent.orderId()));
         payment.setUserId(stockReservedEvent.customerEmail());
@@ -54,17 +50,12 @@ public class PaymentService {
         payment.setQuantity(stockReservedEvent.quantity());
         payment.setRetryCount(0);
         payment.setExternalTransactionId(UUID.randomUUID().toString());
-
         Payment savedPayment = paymentRepository.save(payment);
-        log.info("Payment kaydı oluşturuldu: paymentId={}, orderId={}, status=PENDING, amount={}",
-                savedPayment.getId(), savedPayment.getOrderId(), savedPayment.getAmount());
 
         return savedPayment;
     }
 
     public Payment processManualPayment(String paymentId) {
-        log.info("Manuel ödeme işlemi başlatılıyor: paymentId={}", paymentId);
-
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new RuntimeException("Ödeme bulunamadı: " + paymentId));
 
@@ -73,14 +64,9 @@ public class PaymentService {
         }
 
         PaymentStatus paymentStatus = processPayment(payment.getAmount());
-
         payment.setStatus(paymentStatus);
         payment.setRetryCount(0);
-
         Payment savedPayment = paymentRepository.save(payment);
-        log.info("Manuel ödeme işlemi tamamlandı: paymentId={}, orderId={}, status={}",
-                savedPayment.getId(), savedPayment.getOrderId(), savedPayment.getStatus());
-
         publishPaymentEventForManualPayment(savedPayment);
 
         return savedPayment;
@@ -117,9 +103,6 @@ public class PaymentService {
                 paymentFailedKafkaTemplate.send("payment-failed", paymentFailedEvent);
                 log.info("Payment failed event gönderildi: orderId={}, paymentId={}, reason={}",
                         orderId, payment.getId(), failureReason);
-            } else {
-                log.warn("Ödeme başarısız, ancak productId ve quantity bilgisi yok: paymentId={}, orderId={}",
-                        payment.getId(), orderId);
             }
         }
     }
@@ -128,7 +111,6 @@ public class PaymentService {
 
 
     private PaymentStatus processPayment(java.math.BigDecimal amount) {
-        log.info("Ödeme başarıyla tamamlandı: amount={}", amount);
         return PaymentStatus.SUCCESS;
     }
 
@@ -163,8 +145,6 @@ public class PaymentService {
     }
 
     public Payment rejectPayment(String paymentId) {
-        log.info("Ödeme reddediliyor: paymentId={}", paymentId);
-
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new RuntimeException("Ödeme bulunamadı: " + paymentId));
 

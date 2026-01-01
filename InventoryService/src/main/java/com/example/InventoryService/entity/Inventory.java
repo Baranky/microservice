@@ -24,16 +24,6 @@ public class Inventory {
     public Inventory() {
     }
 
-    public Inventory(Long id, Long productId, Integer stock) {
-        this.id = id;
-        this.productId = productId;
-        this.stock = stock;
-    }
-
-    public Inventory(Long productId, Integer stock) {
-        this.productId = productId;
-        this.stock = stock;
-    }
 
     public Long getId() {
         return id;

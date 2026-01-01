@@ -47,7 +47,6 @@ public class InventoryService {
 
 
     @KafkaListener(topics = "order-placed", groupId = "inventory-group")
-    @Transactional
     public void handleOrderPlaced(OrderEvent event) {
         log.info("Order placed event alındı: orderId={}, productId={}, quantity={}, totalPrice={}",
                 event.orderId(), event.productId(), event.quantity(), event.totalPrice());
@@ -108,7 +107,6 @@ public class InventoryService {
 
 
     @KafkaListener(topics = "payment-failed", groupId = "inventory-group", containerFactory = "paymentFailedKafkaListenerContainerFactory")
-    @Transactional
     public void handlePaymentFailed(PaymentFailedEvent event) {
         log.info("Payment failed event alındı: orderId={}, productId={}, quantity={}, paymentId={}, reason={}",
                 event.orderId(), event.productId(), event.quantity(), event.paymentId(), event.reason());

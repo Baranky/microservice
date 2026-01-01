@@ -43,10 +43,7 @@ public class ProductService {
         try {
             InventoryRequest inventoryRequest = new InventoryRequest(savedProduct.getId(),request.stock());
             inventoryClient.createInventory(inventoryRequest);
-            log.info("Product ve Inventory kaydı oluşturuldu: productId={}, stock={}",
-                    savedProduct.getId(), request.stock());
         } catch (Exception e) {
-            log.error("Inventory kaydı oluşturulamadı, product siliniyor: productId={}", savedProduct.getId(), e);
             productRepository.delete(savedProduct);
             throw new RuntimeException("Ürün oluşturulamadı: " + e.getMessage());
         }
@@ -65,7 +62,7 @@ public class ProductService {
         return productRepository.save(existingProduct);
     }
 
-    @Transactional
+
     public void deleteProduct(Long id) {
         if (!productRepository.existsById(id)) {
             throw new RuntimeException("Ürün bulunamadı: " + id);
@@ -73,12 +70,10 @@ public class ProductService {
 
         try {
             inventoryClient.deleteInventoryByProductId(id);
-            log.info("Inventory kaydı silindi: productId={}", id);
         } catch (Exception e) {
             log.warn("Inventory kaydı silinirken hata oluştu (devam ediliyor): productId={}", id, e);
         }
 
         productRepository.deleteById(id);
-        log.info("Product silindi: productId={}", id);
     }
 }
