@@ -2,7 +2,7 @@
 
 Bu proje, **Spring Boot 3** ve **Spring Cloud** teknolojileri kullanılarak geliştirilmiş, ölçeklenebilir ve hataya dayanıklı (fault-tolerant) bir mikroservis mimarisi örneğidir. Proje temel olarak Service Discovery, API Gateway, **Resilience4j ile Circuit Breaker**, **Event-Driven Architecture (Kafka)**, **Saga Pattern (Choreography)**, ve **Distributed Tracing (Zipkin)** desenlerini demonstrasyonunu içerir.
 
-## 📋 İçindekiler
+##  İçindekiler
 
 - [Mimari ve Servisler]
 - [Saga Pattern İş Akışı]
@@ -11,7 +11,7 @@ Bu proje, **Spring Boot 3** ve **Spring Cloud** teknolojileri kullanılarak geli
 - [API Endpoints]
 - [Monitoring ve Tracing]
 
-## 🏗️ Mimari ve Servisler
+##  Mimari ve Servisler
 
 Proje 6 ana mikroservisten oluşur:
 
@@ -24,7 +24,7 @@ Proje 6 ana mikroservisten oluşur:
 | **InventoryService** | `8094` | Stok yönetim servisi. PostgreSQL veritabanı kullanır. Kafka'dan sipariş event'lerini dinler ve stok düşürür. |
 | **PaymentService** | `8095` | Ödeme servisi. PostgreSQL veritabanı kullanır. Saga Pattern ile ödeme işlemlerini yönetir. |
 
-## 🔄 Saga Pattern İş Akışı
+##  Saga Pattern İş Akışı
 
 ### Başarılı Sipariş Akışı
 
@@ -61,7 +61,7 @@ Proje 6 ana mikroservisten oluşur:
 2. `InventoryService` → Stokları geri ekler ve `stock-released` event yayınlar
 3. `OrderService` → Sipariş status `CANCELLED` olur
 
-## 🛠️ Teknolojiler
+## Teknolojiler
 
 - **Dil:** Java 21
 - **Framework:** Spring Boot 3.5.x, Spring Cloud 2025.0.0
@@ -77,7 +77,7 @@ Proje 6 ana mikroservisten oluşur:
 - **Mesajlaşma:** Apache Kafka, Zookeeper
 - **Araçlar:** Lombok, Maven, Docker Compose
 
-## 🐳 Docker Compose Servisleri
+## Docker Compose Servisleri
 
 Proje kök dizinindeki `docker-compose.yml` dosyası şu servisleri içerir:
 
@@ -88,7 +88,7 @@ Proje kök dizinindeki `docker-compose.yml` dosyası şu servisleri içerir:
 | **Kafka UI** | `8096` | Kafka topic'lerini görüntülemek için web arayüzü |
 | **Zipkin** | `9411` | Distributed tracing UI |
 
-## 🚀 Kurulum ve Çalıştırma
+## Kurulum ve Çalıştırma
 
 ### 1. Docker Servislerini Başlat
 
@@ -119,7 +119,7 @@ Aşağıdaki veritabanlarını PostgreSQL'de oluşturun:
 5. **PaymentService** - Port 8095
 6. **ApiGateway** - Port 8082
 
-## 📡 API Endpoints
+##  API Endpoints
 
 ### ProductService (Port: 8092)
 
@@ -154,7 +154,7 @@ Aşağıdaki veritabanlarını PostgreSQL'de oluşturun:
 - `POST /api/payments/{id}/reject` - Ödemeyi reddet (sipariş iptal edilir)
 - `POST /api/payments/{id}/retry` - Ödeme işlemini tekrar dene
 
-## 📊 Monitoring ve Tracing
+##  Monitoring ve Tracing
 
 ### Eureka Dashboard
 
@@ -171,7 +171,7 @@ Aşağıdaki veritabanlarını PostgreSQL'de oluşturun:
 - **URL:** http://localhost:9411
 - Distributed tracing için tüm servisler arasındaki istek akışını görüntüleyebilirsiniz
 
-## 📝 Kafka Topics
+##  Kafka Topics
 
 | Topic | Açıklama | Publisher | Consumer |
 | :--- | :--- | :--- | :--- |
@@ -182,14 +182,14 @@ Aşağıdaki veritabanlarını PostgreSQL'de oluşturun:
 | `payment-failed` | Ödeme başarısız olduğunda | PaymentService | InventoryService |
 | `order-cancelled` | Sipariş iptal edildiğinde | InventoryService | OrderService |
 
-## 🔍 Test Araçları
+## Test Araçları
 
 - **Postman / cURL** - API istekleri için
 - **Kafka UI** - Event'leri görüntülemek için
 - **Zipkin** - Transaction trace'lerini görüntülemek için
 - **Eureka Dashboard** - Servis durumunu kontrol etmek için
 
-## 📚 Önemli Notlar
+##  Önemli Notlar
 
 - Tüm servisler Eureka'ya kayıtlı olmalıdır
 - Kafka ve Zookeeper çalışıyor olmalıdır
